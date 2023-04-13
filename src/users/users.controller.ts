@@ -39,7 +39,7 @@ export class UsersController {
   async deleteUser(
     @Req() req: any,
     @Res() res: any,
-    @Param('userId') userId: any,
+    @Param('userId') userId: string,
   ) {
     return res.status(204).json(await this.userService.deleteUser(userId));
   }
@@ -48,7 +48,7 @@ export class UsersController {
   async updateUser(
     @Req() req: any,
     @Res() res: any,
-    @Param('userId') userId: any,
+    @Param('userId') userId: string,
     @Body() userData: CreateUsersDto,
   ) {
     return res

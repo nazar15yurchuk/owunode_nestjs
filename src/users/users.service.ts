@@ -20,7 +20,7 @@ export class UsersService {
     return this.users;
   }
 
-  async updateUser(userData: CreateUsersDto, userId: any,) {
+  async updateUser(userData: CreateUsersDto, userId: string) {
     const user = await this.users.findIndex((item) => item.id === userId);
 
     this.users[user] = { ...userData };
