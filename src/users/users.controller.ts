@@ -24,6 +24,17 @@ export class UsersController {
     return res.status(HttpStatus.OK).json(await this.userService.getAllUsers());
   }
 
+  @Get('/:userId')
+  async getUsersById(
+    @Req() req: any,
+    @Res() res: any,
+    @Param('userId') userId: string,
+  ) {
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.userService.getUserById(userId));
+  }
+
   @Post()
   async createUser(
     @Req() req: any,
@@ -56,6 +67,6 @@ export class UsersController {
       .json(await this.userService.updateUser(userData, userId));
   }
 
-  @Post('/animals/:id')
-  async addNewPet() {}
+  // @Post('/animals/:id')
+  // async addNewPet() {}
 }
