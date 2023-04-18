@@ -9,15 +9,24 @@ import {
   Post,
   Req,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUsersDto } from './dto/users.dto';
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
+import { editFileName, imageFileFilter } from '../core/file-upload/file.upload';
+import { PetsService } from '../pets/pets.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly petsService: PetsService,
+  ) {}
 
   @Get()
   async getUsersList(@Req() req: any, @Res() res: any) {
@@ -36,11 +45,24 @@ export class UsersController {
   }
 
   @Post()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './public',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
   async createUser(
     @Req() req: any,
     @Body() body: CreateUsersDto,
     @Res() res: any,
+    @UploadedFile() file: Express.Multer.File,
   ) {
+    if (file) {
+      body.avatar = `public/${file.filename}`;
+    }
     return res
       .status(HttpStatus.CREATED)
       .json(await this.userService.createUser(body));
@@ -67,6 +89,17 @@ export class UsersController {
       .json(await this.userService.updateUser(userData, userId));
   }
 
-  // @Post('/animals/:id')
-  // async addNewPet() {}
+  @Post('/animals/:id')
+  async addNewPet(
+    @Req() req: any,
+    @Res() res: any,
+    @Param('userId') userId: string,
+  ) {
+    const user = await this.userService.getUserById(userId);
+    if (!user) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json(`User with ${userId} not found`);
+    }
+  }
 }

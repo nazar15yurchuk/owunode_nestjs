@@ -15,6 +15,7 @@ export class UsersService {
     return await this.prismaService.user.findFirst({
       where: { id: userId },
       select: {
+        id: true,
         name: true,
         age: true,
         email: true,
@@ -30,6 +31,7 @@ export class UsersService {
         status: userData.status,
         age: userData.age,
         email: userData.email,
+        avatar: userData.avatar,
       },
     });
   }
