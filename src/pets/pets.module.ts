@@ -9,5 +9,6 @@ import { PrismaService } from "../core/orm/prisma.service";
   imports: [forwardRef(() => UsersModule)],
   controllers: [PetsController],
   providers: [PetsService, UsersService, PrismaService],
+  exports: [PetsService],
 })
 export class PetsModule {}

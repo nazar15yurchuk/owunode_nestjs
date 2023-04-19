@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Pets } from "@prisma/client";
 import { PrismaService } from "../core/orm/prisma.service";
 import { UsersService } from "../users/users.service";
 import { PetsDto } from "./dto/pets.dto";
@@ -10,11 +11,7 @@ export class PetsService {
     private readonly userService: UsersService
   ) {}
   async createAnimal(data: PetsDto, userId: string) {
-    const user = await this.userService.getUserById(userId);
-    if (!user) {
-      throw new HttpException("no user", HttpStatus.NOT_FOUND);
-    }
-
+    const user = await this.checkUser(userId);
     return this.prismaService.pets.create({
       data: {
         name: data.name,
@@ -27,7 +24,15 @@ export class PetsService {
     });
   }
 
-  async createAnimalSecond(data: any) {
+  async checkUser(userId: string) {
+    const user = await this.userService.getUserById(userId);
+    if (!user) {
+      throw new HttpException("no user", HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
+
+  async updateAnimal(data: any): Promise<Pets> {
     return this.prismaService.pets.create({
       data: {
         name: data.name,

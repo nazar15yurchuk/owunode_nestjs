@@ -19,6 +19,7 @@ import { diskStorage } from "multer";
 import { editFileName, imageFileFilter } from "../core/file-upload/file.upload";
 import { PetsService } from "../pets/pets.service";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { PetsDto } from "../pets/dto/pets.dto";
 
 @ApiTags("Users")
 @Controller("users")
@@ -89,10 +90,11 @@ export class UsersController {
       .json(await this.userService.updateUser(userData, userId));
   }
 
-  @Post("/animals/:id")
+  @Post("/animals/:userId")
   async addNewPet(
     @Req() req: any,
     @Res() res: any,
+    @Body() body: PetsDto,
     @Param("userId") userId: string
   ) {
     const user = await this.userService.getUserById(userId);
@@ -101,5 +103,8 @@ export class UsersController {
         .status(HttpStatus.NOT_FOUND)
         .json(`User with ${userId} not found`);
     }
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.petsService.createAnimal(body, userId));
   }
 }
