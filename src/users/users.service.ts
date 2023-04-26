@@ -3,7 +3,6 @@ import { CreateUsersDto } from "./dto/users.dto";
 import { PrismaService } from "../core/orm/prisma.service";
 import { User } from "@prisma/client";
 
-
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -48,6 +47,12 @@ export class UsersService {
     return await this.prismaService.user.update({
       where: { id: userId },
       data: userData,
+    });
+  }
+
+  async findByUsername(userEmail: string) {
+    return await this.prismaService.user.findFirst({
+      where: { email: userEmail },
     });
   }
 }
