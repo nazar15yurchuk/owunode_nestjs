@@ -7,6 +7,7 @@ import {
   IsString,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { IsValidDays } from "../decorators/check.days";
 
 export class CreateUsersDto {
   @ApiProperty()
@@ -36,4 +37,10 @@ export class CreateUsersDto {
 
   @ApiProperty()
   avatar: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsValidDays()
+  @IsOptional()
+  dayOff: string;
 }

@@ -8,9 +8,20 @@ import { PetsModule } from "./pets/pets.module";
 import { PrismaService } from "./core/orm/prisma.service";
 import { PetsService } from "./pets/pets.service";
 import { AuthModule } from "./auth/auth.module";
+import { PrismaModule } from "./core/orm/prisma.module";
+import { PassportWrapperModule } from "./auth/passport-wrapper.module";
 
 @Module({
-  imports: [UsersModule, PetsModule, AuthModule],
+  imports: [
+    UsersModule,
+    PetsModule,
+    AuthModule,
+    PrismaModule,
+    PassportWrapperModule,
+    // ServeStaticModule.forRoot({
+    //   rootPath:join(__dirname, '..', 'public')
+    // })
+  ],
   controllers: [AppController, UsersController],
   providers: [AppService, UsersService, PrismaService, PetsService],
 })

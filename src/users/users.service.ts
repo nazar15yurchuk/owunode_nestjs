@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { CreateUsersDto } from "./dto/users.dto";
 import { PrismaService } from "../core/orm/prisma.service";
 import { User } from "@prisma/client";
+import { RegisterDto } from "../auth/dto/auth.dto";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -14,16 +16,10 @@ export class UsersService {
   async getUserById(userId: string) {
     return await this.prismaService.user.findFirst({
       where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        age: true,
-        email: true,
-      },
     });
   }
 
-  async createUser(userData: CreateUsersDto): Promise<User> {
+  async createUserByManager(userData: CreateUsersDto): Promise<User> {
     return await this.prismaService.user.create({
       data: {
         name: userData.name,
@@ -35,6 +31,23 @@ export class UsersService {
       },
     });
   }
+
+  async createUser(userData: RegisterDto): Promise<User> {
+    const passwordHash = await this.hashPassword(userData.password);
+
+    return await this.prismaService.user.create({
+      data: {
+        name: userData.name,
+        email: userData.email,
+        password: passwordHash,
+      },
+    });
+  }
+
+  async hashPassword(password: string) {
+    return bcrypt.hash(password, 10);
+  }
+
   async deleteUser(userId: string): Promise<User> {
     return await this.prismaService.user.delete({
       where: {
@@ -50,7 +63,7 @@ export class UsersService {
     });
   }
 
-  async findByUsername(userEmail: string) {
+  async findUserByEmail(userEmail: string) {
     return await this.prismaService.user.findFirst({
       where: { email: userEmail },
     });

@@ -5,26 +5,19 @@ import { UsersModule } from "../users/users.module";
 import { UsersService } from "../users/users.service";
 import { PrismaService } from "../core/orm/prisma.service";
 import { PassportModule } from "@nestjs/passport";
-import { LocalStrategy } from "./local.strategy";
+import { BearerStrategy } from "./bearer.strategy";
 import { JwtModule } from "@nestjs/jwt";
-import { JwtStrategy } from "./jwt.strategy";
 
 @Module({
   imports: [
     UsersModule,
-    PassportModule,
+    PassportModule.register({ defaultStrategy: "bearer" }),
     JwtModule.register({
       secret: "Secret",
       signOptions: { expiresIn: "60000s" },
     }),
   ],
-  providers: [
-    AuthService,
-    UsersService,
-    PrismaService,
-    LocalStrategy,
-    JwtStrategy,
-  ],
+  providers: [AuthService, UsersService, PrismaService, BearerStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })
