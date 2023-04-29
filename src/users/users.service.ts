@@ -39,7 +39,7 @@ export class UsersService {
       data: {
         name: userData.name,
         email: userData.email,
-        password: passwordHash,
+        password: passwordHash.toString(),
       },
     });
   }

@@ -10,6 +10,7 @@ import { PetsService } from "./pets/pets.service";
 import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./core/orm/prisma.module";
 import { PassportWrapperModule } from "./auth/passport-wrapper.module";
+import {CoreModule} from "./core/core.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PassportWrapperModule } from "./auth/passport-wrapper.module";
     AuthModule,
     PrismaModule,
     PassportWrapperModule,
+    CoreModule,
     // ServeStaticModule.forRoot({
     //   rootPath:join(__dirname, '..', 'public')
     // })
